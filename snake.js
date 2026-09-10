@@ -74,20 +74,26 @@ function draw() {
         snake[0][0] < 10 ||
         snake[0][1] + 20 > height - 10 ||
         snake[0][1] < 10
-    ) {
+    ) 
+    {
         gameOver = true;
     }
 
     //snake
-    fill(34, 197, 94);
 
-    for (let val of snake) {
-        square(val[0], val[1], 20);
+    if(!gameOver){
+        fill(34, 197, 94);
+
+        for (let val of snake) {
+            square(val[0], val[1], 20);
+        }
     }
+
+    
 
     // Game over
     if (gameOver) {
-        
+
         fill(248, 250, 252);
         textSize(52);
         textStyle(BOLD);
@@ -100,13 +106,10 @@ function draw() {
         fill(148, 163, 184);
         text("Press R to restart", width / 2, height / 2 + 35);
     }
+
 }
 
 function keyPressed() {
-
-    if (gameOver === true) {
-        return;
-    }
 
     if (keyCode === UP_ARROW || key === "w") {
         if(direction !="down"){
@@ -130,6 +133,16 @@ function keyPressed() {
         if(direction !="left"){
             direction = "right";
         }
+    }
+
+    if((key==="r" || key==="R")&&gameOver){
+        snake = [
+        [300, 300],
+        [280, 300],
+        [260, 300],
+        [240, 300]
+        ];
+        gameOver=false;
     }
 
     return false;
