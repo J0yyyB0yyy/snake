@@ -1,12 +1,13 @@
-let bgColor = { r: 132, g: 0, b: 255 };
-let direction = "", moveDirection ="";
+let bgColor = { r: 15, g: 23, b: 42 };
+let direction = "";
 let gameOver = false;
 let lastMove=0, moveDelay=200;
 
 let snake = [
     [300, 300],
     [280, 300],
-    [260, 300]
+    [260, 300],
+    [240, 300]
 ];
 
 function setup() {
@@ -53,7 +54,7 @@ function draw() {
     background(bgColor.r, bgColor.g, bgColor.b);
 
     // border
-    stroke(0, 0, 0);
+    stroke(51, 65, 85);
     strokeWeight(10);
     noFill();
     rect(0, 0, width, height);
@@ -78,7 +79,7 @@ function draw() {
     }
 
     //snake
-    fill(0, 0, 0);
+    fill(34, 197, 94);
 
     for (let val of snake) {
         square(val[0], val[1], 20);
@@ -86,10 +87,18 @@ function draw() {
 
     // Game over
     if (gameOver) {
-        fill(255, 0, 0);
-        textSize(50);
+        
+        fill(248, 250, 252);
+        textSize(52);
+        textStyle(BOLD);
         textAlign(CENTER, CENTER);
-        text("GAME OVER", width / 2, height / 2);
+
+        text("GAME OVER", width / 2, height / 2 - 20);
+
+        textSize(18);
+        textStyle(NORMAL);
+        fill(148, 163, 184);
+        text("Press R to restart", width / 2, height / 2 + 35);
     }
 }
 
