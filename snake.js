@@ -6,18 +6,6 @@ let score=0, highScore;
 let food;
 
 
-// class Food{
-//     constructor(){
-//         this.x=random(20, width-20);
-//         this.y=random(20, height-20);
-//     }
-//     show(){
-//         fill(255, 0, 0)
-//         circle(this.x,this.y, 20);
-//     }
-// }
-
-
 let snake = [
     [300, 300],
     [280, 300],
@@ -32,8 +20,17 @@ function setup() {
         y: 20*floor(random(1, 29)),
 
         createFood(){
-            this.x = 20*floor(random(1, 29));
-            this.y = 20*floor(random(1, 29));
+            let occupied = true;
+            while(occupied){
+                this.x = 20*floor(random(1, 29));
+                this.y = 20*floor(random(1, 29));
+                occupied=false;
+                for (let val of snake) {
+                    if (this.x === val[0] && this.y === val[1]) {
+                        occupied = true;
+                    }
+                }  
+            }
         }
     };
 
@@ -139,7 +136,7 @@ function draw() {
 
     //eating
     if(food.x==snake[0][0] && food.y==snake[0][1]){
-        eat=true;
+        eat=true; 
         food.createFood();
     }
 
