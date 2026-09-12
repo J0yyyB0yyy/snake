@@ -2,7 +2,7 @@ let bgColor = { r: 15, g: 23, b: 42 };
 let direction = "";
 let gameOver = false, eat=false;
 let lastMove=0, moveDelay=200;
-let score=0, highScore;
+let score=0, highScore=0;
 let food;
 
 
@@ -10,7 +10,7 @@ let snake = [
     [300, 300],
     [280, 300],
     [260, 300],
-    [240, 300]
+    [240, 300],
 ];
 
 function setup() {
@@ -36,45 +36,70 @@ function setup() {
 
 }
 
+function checkCollision(snake){
+    let len = snake.length;
+    for(let i=1; i<len;i++){
+        if(snake[0][0]===snake[i][0]&&snake[0][1]===snake[i][1]){
+            return true;
+        }
+    }
+    return false;
+
+}
+
 function move(snake, direction) {
+    let newHead;
 
     if (direction === "up") {
-        snake.unshift([
-            snake[0][0],
-            snake[0][1] - 20
-        ]);    
+        newHead=[snake[0][0],snake[0][1] - 20];    
     }
-
     else if (direction === "down") {
-        snake.unshift([
+        newHead=[
             snake[0][0],
             snake[0][1] + 20
-        ]);
+        ];
     }
-
     else if (direction === "right") {
-        snake.unshift([
+        newHead=[
             snake[0][0] + 20,
             snake[0][1]
-        ]);
+        ];
     }
-
     else if (direction === "left") {
-        snake.unshift([
+        newHead=[
             snake[0][0] - 20,
             snake[0][1]
-        ]);
+        ];
     }
+
+    if(newHead[0]===food.x && newHead[1]===food.y){
+        eat=true;
+        score+=10;
+        highScore=Math.max(score, highScore);
+        food.createFood();
+    }
+
+    snake.unshift(newHead);
+
     if(!eat){
-        snake.pop()
+        snake.pop();
     }
+
     eat=false;
-    
 }
 
 function draw() {
 
     background(bgColor.r, bgColor.g, bgColor.b);
+
+    //score
+    fill(248, 250, 252);
+    textSize(20);
+    textStyle(BOLD);
+    textAlign(LEFT, TOP);
+
+    text("Score: " + score, 20, 20);
+    text("High Score: " + highScore, 430, 20);
     
 
     // border
@@ -107,17 +132,17 @@ function draw() {
     fill(255, 0, 0);
     noStroke();
     circle(food.x + 10, food.y + 10, 20);
-
+    
+    //collision
+    if(checkCollision(snake)){
+        gameOver=true;
+    }
     //snake
     fill(34, 197, 94);
     for (let val of snake) {
         square(val[0], val[1], 20);
     }
     
-    
-
-    
-
     // Game over
     if (gameOver) {
 
@@ -135,10 +160,6 @@ function draw() {
     }
 
     //eating
-    if(food.x==snake[0][0] && food.y==snake[0][1]){
-        eat=true; 
-        food.createFood();
-    }
 
 }
 
@@ -177,8 +198,11 @@ function keyPressed() {
         [240, 300]
         ];
         direction="";
+        score=0;
         lastMove=0;
         gameOver=false;
+
+        food.createFood();
     }
 
     return false;
