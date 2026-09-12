@@ -1,7 +1,22 @@
 let bgColor = { r: 15, g: 23, b: 42 };
 let direction = "";
-let gameOver = false;
+let gameOver = false, eat=false;
 let lastMove=0, moveDelay=200;
+let score=0, highScore;
+let food;
+
+
+// class Food{
+//     constructor(){
+//         this.x=random(20, width-20);
+//         this.y=random(20, height-20);
+//     }
+//     show(){
+//         fill(255, 0, 0)
+//         circle(this.x,this.y, 20);
+//     }
+// }
+
 
 let snake = [
     [300, 300],
@@ -12,6 +27,16 @@ let snake = [
 
 function setup() {
     createCanvas(600, 600);
+    food = {
+        x: 20*floor(random(1, 29)),
+        y: 20*floor(random(1, 29)),
+
+        createFood(){
+            this.x = 20*floor(random(1, 29));
+            this.y = 20*floor(random(1, 29));
+        }
+    };
+
 }
 
 function move(snake, direction) {
@@ -20,8 +45,7 @@ function move(snake, direction) {
         snake.unshift([
             snake[0][0],
             snake[0][1] - 20
-        ]);
-        snake.pop();
+        ]);    
     }
 
     else if (direction === "down") {
@@ -29,7 +53,6 @@ function move(snake, direction) {
             snake[0][0],
             snake[0][1] + 20
         ]);
-        snake.pop();
     }
 
     else if (direction === "right") {
@@ -37,7 +60,6 @@ function move(snake, direction) {
             snake[0][0] + 20,
             snake[0][1]
         ]);
-        snake.pop();
     }
 
     else if (direction === "left") {
@@ -45,13 +67,18 @@ function move(snake, direction) {
             snake[0][0] - 20,
             snake[0][1]
         ]);
-        snake.pop();
     }
+    if(!eat){
+        snake.pop()
+    }
+    eat=false;
+    
 }
 
 function draw() {
 
     background(bgColor.r, bgColor.g, bgColor.b);
+    
 
     // border
     stroke(51, 65, 85);
@@ -79,15 +106,18 @@ function draw() {
         gameOver = true;
     }
 
+    //food  
+    fill(255, 0, 0);
+    noStroke();
+    circle(food.x + 10, food.y + 10, 20);
+
     //snake
-
-    if(!gameOver){
-        fill(34, 197, 94);
-
-        for (let val of snake) {
-            square(val[0], val[1], 20);
-        }
+    fill(34, 197, 94);
+    for (let val of snake) {
+        square(val[0], val[1], 20);
     }
+    
+    
 
     
 
@@ -107,8 +137,15 @@ function draw() {
         text("Press R to restart", width / 2, height / 2 + 35);
     }
 
+    //eating
+    if(food.x==snake[0][0] && food.y==snake[0][1]){
+        eat=true;
+        food.createFood();
+    }
+
 }
 
+// control
 function keyPressed() {
 
     if (keyCode === UP_ARROW || key === "w") {
@@ -142,6 +179,8 @@ function keyPressed() {
         [260, 300],
         [240, 300]
         ];
+        direction="";
+        lastMove=0;
         gameOver=false;
     }
 
